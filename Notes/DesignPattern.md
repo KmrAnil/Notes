@@ -135,9 +135,9 @@ It provide the concept of Factory of Factories. Alt text
 while creating object when object contain may attributes there are many problem exists :
 1. we have to pass many arguments to create object.
 2. some parameters might be optional
-3. factory class takes all responsibility for creating object . if the object is
-heavy then all complexity is the part of factory class.
-So in builder pattern be create object step by step and finally return final object with desired values of attributes.
+3. factory class takes all responsibility for creating object. If the object is
+heavy then all complexity is the part of factory class.<br/>
+**So in builder pattern be create object step by step and finally return final object with desired values of attributes.**
 ## [Prototype Design Pattern](https://youtu.be/rriiXRdc0HQ)
 The concept is to copy an existing object rather than creating a new instance from scratch. because creating new object may be costly.<br/>
 This approach saves costly resources and time, especially when object creation is a heavy process.
