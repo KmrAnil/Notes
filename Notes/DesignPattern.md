@@ -125,12 +125,136 @@ Factory Method Design Pattern
 When there is superclass and multiple subclasses and we want to get object of subclasses based on input and requirement.
 Then we create factory class which takes the responsibility of creating object of class based on input.
 
+```java
+public interface Employee {
+    String name();
+    int salary();
+    String location();
+}
+
+public abstract class Common implements Employee {
+    @Override
+    public String location() {
+        return "Pune";
+    }
+}
+
+public class WebDeveloper extends Common {
+    @Override
+    public String name() {
+        return "Kumar";
+    }
+
+    @Override
+    public int salary() {
+        return 40000;
+    }
+}
+
+public class AndroidDeveloper extends Common {
+    @Override
+    public String name() {
+        return "Anil";
+    }
+
+    @Override
+    public int salary() {
+        return 20000;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        EmployeeFactory factoryDesign = new EmployeeFactory();
+        Employee region = factoryDesign.getCountry("Web Developer");
+        System.out.println(region.location());
+        System.out.println(region.salary());
+        System.out.println(region.name());
+
+        System.out.println("___________");
+
+        Employee region1 = factoryDesign.getCountry("Android Developer");
+        System.out.println(region1.location());
+        System.out.println(region1.salary());
+        System.out.println(region1.name());
+    }
+}
+```
 ### Advantages of Factory Design Pattern
 1. Focus on creating object for Interface rather than implementation.
-2. Loose coupling, more robust code Alt text
+2. Loose coupling, more robust code
 ## [Abstract Factory Design Pattern](https://youtu.be/D0d2TsfGY2E)
 Similar to Factory Pattern
-It provide the concept of Factory of Factories. Alt text
+It provide the concept of Factory of Factories.
+```java
+public interface Employee {
+    String name();
+    int salary();
+}
+
+public class EmployeeFactory {
+    public static Employee getEmployee(EmployeeAbstractFactory employeeAbstractFactory){
+        return employeeAbstractFactory.createEmployee();
+    }
+}
+
+public abstract class EmployeeAbstractFactory {
+    public abstract Employee createEmployee();
+}
+
+public class AndroidDevFactory extends EmployeeAbstractFactory{
+    @Override
+    public Employee createEmployee() {
+        return new AndroidDeveloper();
+    }
+}
+
+public class WebDevFactory extends EmployeeAbstractFactory{
+    @Override
+    public Employee createEmployee() {
+        return new WebDeveloper();
+    }
+}
+
+public class AndroidDeveloper implements Employee{
+
+    @Override
+    public String name() {
+        return "Android Developer";
+    }
+
+    @Override
+    public int salary() {
+        return 50000;
+    }
+}
+
+public class WebDeveloper implements Employee{
+    @Override
+    public String name() {
+        return "Web Developer";
+    }
+
+    @Override
+    public int salary() {
+        return 60000;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Employee employee = EmployeeFactory.getEmployee(new AndroidDevFactory());
+        System.out.println(employee.name());
+        System.out.println(employee.salary());
+        System.out.println("_____________");
+
+        Employee employee1 = EmployeeFactory.getEmployee(new WebDevFactory());
+        System.out.println(employee1.name());
+        System.out.println(employee1.salary());
+    }
+}
+
+```
 ## [Builder Design Pattern](https://youtu.be/7x8iQUv5lcM)
 while creating object when object contain may attributes there are many problem exists :
 1. we have to pass many arguments to create object.
@@ -138,6 +262,124 @@ while creating object when object contain may attributes there are many problem 
 3. factory class takes all responsibility for creating object. If the object is
 heavy then all complexity is the part of factory class.<br/>
 **So in builder pattern be create object step by step and finally return final object with desired values of attributes.**
+```java
+public class User {
+    private final String name;
+    private final String userName;
+    private final String email;
+
+    public User(UserBuilder userBuilder) {
+        this.name = userBuilder.name;
+        this.userName = userBuilder.userName;
+        this.email = userBuilder.email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    static class UserBuilder{
+        private String name;
+        private String email;
+
+        private String userName;
+
+        public UserBuilder(){
+
+        }
+
+        public UserBuilder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public UserBuilder setEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public UserBuilder setUserName(String userName) {
+            this.userName = userName;
+            return this;
+        }
+
+
+        public User build() {
+            User user = new User(this);
+            return user;
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        User user1 = new User.UserBuilder().
+                setUserName("anil123").
+                setName("Anil").
+                setEmail("anil123@gmail.com").build();
+
+        System.out.println("User 1- Name:"+ user1.getName());
+
+        User user2 = new User.UserBuilder().
+                setUserName("ak123").
+                setName("A.K.").
+                setEmail("ak123@gmail.com").build();
+        System.out.println("User 2- Name:"+ user2.getName());
+    }
+}
+```
+
 ## [Prototype Design Pattern](https://youtu.be/rriiXRdc0HQ)
 The concept is to copy an existing object rather than creating a new instance from scratch. because creating new object may be costly.<br/>
 This approach saves costly resources and time, especially when object creation is a heavy process.
+```java
+public class NetworkConnection implements Cloneable {
+    private String ip;
+    private String importantData;
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    @Override
+    public String toString() {
+        return "NetworkConnection{" +
+                "ip='" + ip + '\'' +
+                ", importantData='" + importantData + '\'' +
+                '}';
+    }
+
+    public void loadData() throws InterruptedException {
+        this.importantData="This is important Data";
+        Thread.sleep(2000);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) throws CloneNotSupportedException, InterruptedException {
+        NetworkConnection networkConnection = new NetworkConnection();
+        networkConnection.setIp("192:12:14:111");
+        networkConnection.loadData();
+        System.out.println(networkConnection);
+
+        NetworkConnection networkConnection1 = (NetworkConnection) networkConnection.clone();
+        System.out.println(networkConnection1);
+    }
+}
+
+```
+
